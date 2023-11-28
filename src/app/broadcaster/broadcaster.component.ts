@@ -25,7 +25,7 @@ export class BroadcasterComponent {
 
   socket: any;
   constructor() {
-    this.socket = io('http://172.203.234.105:4000');
+    this.socket = io('https://dev-apps.paysky.io');
   }
   async ngOnInit(): Promise<void> {
     const constraints = {

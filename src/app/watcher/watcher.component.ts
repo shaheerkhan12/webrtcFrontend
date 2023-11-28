@@ -22,7 +22,7 @@ export class WatcherComponent implements OnInit {
   peerConnection: any = new RTCPeerConnection(this.config);
   socket: any;
   constructor() {
-     this.socket = io('http://172.203.234.105:4000');
+     this.socket = io('https://dev-apps.paysky.io');
   }
   @ViewChild('receiverVideo') receiverVideo!: ElementRef<HTMLVideoElement>;
   ngOnInit(): void {
