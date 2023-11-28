@@ -25,7 +25,9 @@ export class BroadcasterComponent {
 
   socket: any;
   constructor() {
-    this.socket = io('https://dev-apps.paysky.io');
+    this.socket = io('https://dev-apps.paysky.io', {
+      path: '/onfido-node/socket.io'
+    });
   }
   async ngOnInit(): Promise<void> {
     const constraints = {

@@ -22,7 +22,9 @@ export class WatcherComponent implements OnInit {
   peerConnection: any = new RTCPeerConnection(this.config);
   socket: any;
   constructor() {
-     this.socket = io('https://dev-apps.paysky.io');
+    this.socket = io('https://dev-apps.paysky.io', {
+      path: '/onfido-node/socket.io'
+    });
   }
   @ViewChild('receiverVideo') receiverVideo!: ElementRef<HTMLVideoElement>;
   ngOnInit(): void {
