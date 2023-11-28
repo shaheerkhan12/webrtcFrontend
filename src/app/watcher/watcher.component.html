@@ -1,2 +1,12 @@
 <p>watcher works!</p>
 <video  playsinline muted #receiverVideo controls autoplay></video>
+
+<div>
+    <select [(ngModel)]="selectedBroadcaster">
+      <option *ngFor="let broadcaster of broadcastersList" [value]="broadcaster">
+        Broadcaster {{ broadcaster }}
+      </option>
+    </select>
+    <button (click)="joinBroadcast()">Join Broadcast</button>
+    <video id="remoteVideo" autoplay></video>
+  </div>

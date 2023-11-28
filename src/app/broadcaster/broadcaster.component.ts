@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { io } from 'socket.io-client';
+import { ChatService } from '../chat.service';
 @Component({
   selector: 'app-broadcaster',
   templateUrl: './broadcaster.component.html',
@@ -24,12 +25,12 @@ export class BroadcasterComponent {
   peerConnections: any = new RTCPeerConnection(this.config);
 
   socket: any;
-  constructor() {
-    this.socket = io('https://dev-apps.paysky.io', {
-      path: '/onfido-node/socket.io'
-    });
+  constructor(private webrtcService:ChatService) {
+    this.socket = io('http://localhost:80');
   }
   async ngOnInit(): Promise<void> {
+    // this.webrtcService.announceBroadcaster();
+    
     const constraints = {
       video: { facingMode: 'user' },
     };
@@ -66,7 +67,7 @@ export class BroadcasterComponent {
     });
     this.socket.on('answer', (id: any, description: any) => {
       this.peerConnections[id].setRemoteDescription(description);
-      console.log(this.peerConnections);
+      console.log(id);
     });
     this.socket.on('candidate', (id: any, candidate: RTCIceCandidateInit) => {
       this.peerConnections[id].addIceCandidate(new RTCIceCandidate(candidate));

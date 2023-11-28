@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { io } from 'socket.io-client';
+import { ChatService } from '../chat.service';
 
 @Component({
   selector: 'app-watcher',
@@ -7,6 +8,8 @@ import { io } from 'socket.io-client';
   styleUrls: ['./watcher.component.scss'],
 })
 export class WatcherComponent implements OnInit {
+  broadcastersList: string[] = [];
+  selectedBroadcaster: string = '';
    config = {
     iceServers: [
       {
@@ -21,15 +24,19 @@ export class WatcherComponent implements OnInit {
   };
   peerConnection: any = new RTCPeerConnection(this.config);
   socket: any;
-  constructor() {
-    this.socket = io('https://dev-apps.paysky.io', {
-      path: '/onfido-node/socket.io'
-    });
+  constructor(private webrtcService: ChatService) {
+    this.socket = io('http://localhost:80');
   }
   @ViewChild('receiverVideo') receiverVideo!: ElementRef<HTMLVideoElement>;
   ngOnInit(): void {
     const enableAudioButton = document.querySelector('#enable-audio');
+    // this.webrtcService.requestBroadcasters();
+  this.socket.emit('request-broadcasters');
+  this.socket.on('broadcasters-list', (broadcastersList: string[]) => {
+    this.broadcastersList = broadcastersList
+      });
 
+    
     // enableAudioButton.addEventListener('click', enableAudio);
 
     this.socket.on("offer", (id: any, description: any) => {
@@ -72,7 +79,27 @@ export class WatcherComponent implements OnInit {
 
     
   }
+
+  joinBroadcast(): void {
+    this.socket.emit('watcher', this.selectedBroadcaster);
+  }
   enableAudio() {
     this.receiverVideo.nativeElement.muted = false;
   }
+
+   // announceBroadcaster(): void {
+  //   this.socket.emit('announce-broadcaster');
+  // }
+
+  // requestBroadcasters(): void {
+  //   this.socket.emit('request-broadcasters');
+  // }
+
+
+
+  // private setupSocketListeners(): void {
+  //   this.socket.on('broadcasters-list', (broadcastersList: string[]) => {
+  //     this.broadcastersListSubject.next(broadcastersList);
+  //   });
+  // }
 }
