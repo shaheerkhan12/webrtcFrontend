@@ -3,10 +3,14 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { WatcherComponent } from './watcher/watcher.component';
+import { BroadcasterComponent } from './broadcaster/broadcaster.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    WatcherComponent,
+    BroadcasterComponent
   ],
   imports: [
     BrowserModule,
