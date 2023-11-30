@@ -25,7 +25,9 @@ export class WatcherComponent implements OnInit {
   peerConnection: any = new RTCPeerConnection(this.config);
   socket: any;
   constructor(private webrtcService: ChatService) {
-    this.socket = io('http://localhost:80');
+    this.socket = io('https://dev-apps.paysky.io', {
+      path: '/onfido-node/socket.io'
+    });
   }
   @ViewChild('receiverVideo') receiverVideo!: ElementRef<HTMLVideoElement>;
   ngOnInit(): void {
@@ -34,12 +36,16 @@ export class WatcherComponent implements OnInit {
   this.socket.emit('request-broadcasters');
   this.socket.on('broadcasters-list', (broadcastersList: string[]) => {
     this.broadcastersList = broadcastersList
+    console.log( this.broadcastersList);
+    
       });
 
     
     // enableAudioButton.addEventListener('click', enableAudio);
 
     this.socket.on("offer", (id: any, description: any) => {
+      console.log('offer triggered watcher component',id);
+      
       // this.peerConnection = new RTCPeerConnection(config);
       this.peerConnection
         .setRemoteDescription(description)
@@ -65,12 +71,16 @@ export class WatcherComponent implements OnInit {
     });
 
     this.socket.on('connect', () => {
+      console.log('connect triggered watcher component');
+
       this.socket.emit('watcher');
     });
 
-    this.socket.on('broadcaster', () => {
-      this.socket.emit('watcher');
-    });
+    // this.socket.on('broadcaster', ( test = 'sdasadasd') => {
+    //   console.log('broadcaster triggered watcher component');
+
+    //   this.socket.emit('watcher');
+    // });
 
     window.onunload = window.onbeforeunload = () => {
       this.socket.close();

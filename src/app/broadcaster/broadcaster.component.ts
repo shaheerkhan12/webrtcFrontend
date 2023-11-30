@@ -26,11 +26,14 @@ export class BroadcasterComponent {
 
   socket: any;
   constructor(private webrtcService:ChatService) {
-    this.socket = io('http://localhost:80');
+    this.socket = io('https://dev-apps.paysky.io', {
+      path: '/onfido-node/socket.io'
+    });
   }
   async ngOnInit(): Promise<void> {
     // this.webrtcService.announceBroadcaster();
-    
+    let broadcasterID ='lmVkQphpVgIdLNK7AABF'
+    this.socket.emit('announce-broadcaster',broadcasterID);
     const constraints = {
       video: { facingMode: 'user' },
     };
@@ -38,12 +41,14 @@ export class BroadcasterComponent {
       .getUserMedia(constraints)
       .then((stream) => {
         this.remoteVideo.nativeElement.srcObject = stream;
-        this.socket.emit('broadcaster');
+        // this.socket.emit('broadcaster');
       })
       .catch((error) => console.error(error));
 
 
     this.socket.on('watcher', (id: any) => {
+      console.log("watcher triggered",id);
+      
       const peerConnection = new RTCPeerConnection(this.config);
       this.peerConnections[id] = peerConnection;
 
@@ -66,10 +71,14 @@ export class BroadcasterComponent {
         });
     });
     this.socket.on('answer', (id: any, description: any) => {
+      console.log("answer triggered",id);
+
       this.peerConnections[id].setRemoteDescription(description);
       console.log(id);
     });
     this.socket.on('candidate', (id: any, candidate: RTCIceCandidateInit) => {
+      console.log("candidate triggered",id);
+
       this.peerConnections[id].addIceCandidate(new RTCIceCandidate(candidate));
     });
     this.socket.on('disconnectPeer', (id: any) => {
